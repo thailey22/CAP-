@@ -2,6 +2,7 @@ import { useState } from "react";
 import SignIn from "./components/SignIn"
 import SignUp from "./components/SignUp"
 import { CiUser,CiLock, CiMail} from "react-icons/ci";
+import cong from "./components/conFig";
 
 
 
