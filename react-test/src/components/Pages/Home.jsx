@@ -1,6 +1,8 @@
 import React from 'react'
 import { useAuth } from '../Context/authContext'
 import { useNavigate } from 'react-router-dom'
+import { Database,get } from 'firebase/database'
+import {collection} from 'firebase/firestore'
 
 const Home = () => {
     const { currentUser, signOut } = useAuth()

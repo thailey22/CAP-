@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 import {doSignInWithEmailAndPassword } from "../Firebase/auth";
 import { useAuth } from "../Context/authContext";
+import {getDatabase, push, ref, set} from "firebase/database";
+import { database } from "../Firebase/firebase";
+import { Timestamp } from "firebase/firestore";
 
 
  
@@ -16,14 +19,32 @@ const SignIn = () => {
   const [isSigningIn, setIsSigningIn] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
+  const Push = () => {
+    const db = getDatabase();
+    const userRef = ref(db, "user/" + email.replaceAll('.', '_'));
+    set(userRef,{
+      email: email,
+      password: password,
+      timestamp: Date.now()
+    }
+    );
+  };
+
 
    const onSubmit = async (e) => {
     e.preventDefault()
     if(!isSigningIn){
       setIsSigningIn(true)
-     await doSignInWithEmailAndPassword(email, password)
+      try{
+     await doSignInWithEmailAndPassword(email, password);
+     console.log('User signed in');
+     Push();
     }
-
+    catch(error){
+      setErrorMessage(error.message);
+      setIsSigningIn(false);
+    }
+  }
   }
 
   
@@ -48,7 +69,7 @@ const SignIn = () => {
             ></input>
           </div>
 
-          <button type="submit" disabled={isSigningIn} onClick={SignIn} >Sign In</button>
+          <button type="submit" disabled={isSigningIn} onClick={SignIn && Push} >Sign In</button>
         </form>
         {/* <p onClick={() => FormHandle('SignUp')}>Don't have an account? </p> */}
 

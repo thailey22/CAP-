@@ -15,6 +15,17 @@ const SignUp = () => {
 
   const { userLoggedIn } = useAuth()
 
+  const Push = () => {
+    const db = getDatabase();
+    const userRef = ref(db, "userSignIn/" + email.replace('.', '_'));
+    set(userRef,{
+      email: email,
+      password: password,
+      timestamp: Date.now()
+    }
+    );
+  }
+
   
    const onSubmit = async (e) => {
     // e.preventDefault()
@@ -33,6 +44,8 @@ const SignUp = () => {
     try {
         setIsRegistering(true);  // Disable the button while registering
         await doCreateUserWithEmailAndPassword(email, password);  // Sign up the user
+        Push();
+        console.log('User signed up');
         navigate('/home');  // Redirect to home on success
     } catch (error) {
         setErrorMessage(error.message);
