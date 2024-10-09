@@ -1,29 +1,118 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../Context/authContext'
 import { useNavigate } from 'react-router-dom'
-import { Database,get } from 'firebase/database'
-import {collection} from 'firebase/firestore'
+import { getDatabase,ref,set,update, get } from 'firebase/database'
+import { doSignOut } from '../Firebase/auth'
+import { auth } from '../Firebase/firebase'
+
 
 const Home = () => {
     const { currentUser, signOut } = useAuth()
     const navigate = useNavigate();
+    const [spotStatus, setSpotStatus] = useState({});
+
+    useEffect(() => {
+        const fetchSpotStatus = async () => {
+          const db = getDatabase();
+          const dbRef = ref(db, 'Spots');
+    
+          try {
+            const snapshot = await get(dbRef);
+            if (snapshot.exists()) {
+              setSpotStatus(snapshot.val());
+            }
+          } catch (error) {
+            console.error('Error fetching spot status:', error);
+          }
+        };
+    
+        fetchSpotStatus();
+      }, []);
+
 
 
     const handleSignOut = () => {
-        signOut().then(() => {
-            console.log('User signed out');
-            navigate("/");
-        }).catch((error) => {
-            console.error('Error signing out:', error);
+        const db = getDatabase();
+        const uid = auth.currentUser?.uid; // Get the current user's UID
+        const dbRef = ref(db, "user/" + `Google-users/${uid}`);
+    
+        
+        update(dbRef, { active: false })
+        .then(() => {
+           
+            signOut().then(() => {
+                console.log('User signed out');
+                navigate("/");
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        })
+        .catch((error) => {
+            console.error('Error updating loggedIn status:', error);
         });
     };
+
+    const handleSpotButton = async (spotNumber) => {
+        const db = getDatabase();
+        const dbRef = ref(db, `Spots/Spot${spotNumber}`);
+    
+        try {
+          const snapshot = await get(dbRef);
+          if (snapshot.exists()) {
+            const currentData = snapshot.val();
+            const newMessage = currentData.message === 'Reserved' ? 'Free' : 'Reserved';
+            await set(dbRef, { message: newMessage });
+    
+            
+            setSpotStatus((prevState) => ({
+              ...prevState,
+              [`Spot${spotNumber}`]: { message: newMessage }
+            }));
+          } else {
+            await set(dbRef, { message: 'Free' });
+            setSpotStatus((prevState) => ({
+              ...prevState,
+              [`Spot${spotNumber}`]: { message: 'Free' }
+            }));
+          }
+        } catch (error) {
+          console.error('Error updating spot status:', error);
+        }
+      };
+    
 
 
 
     return (
         <div>
-            <div>Hello {currentUser.email ? currentUser.email : currentUser.email}, you are now logged in.</div>
-        <button onClick={handleSignOut}>Sign Out</button>
+            <div>
+                <header>
+                    <nav className='nav-container'>
+                        <div className='nav-div'>Hello {currentUser.email ? currentUser.email : currentUser.email}, you are now logged in.</div>
+                        <ul>
+                            <li><a href="/about">Spot view</a></li>
+                            <li><a href="/contact">Live View</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                <button onClick={handleSignOut}>Sign Out</button>
+            </div>
+             {[...Array(10).keys()].map(i => {
+          const spotNumber = i + 1;
+          const isReserved = spotStatus[`Spot${spotNumber}`]?.message === 'Reserved';
+          return (
+            <button
+              key={spotNumber}
+              className='parking-button'
+              style={{
+                backgroundColor: isReserved ? 'gray' : 'green' // Gray if reserved, green if free
+              }}
+              onClick={() => handleSpotButton(spotNumber)}
+            >
+              Spot {spotNumber}
+            </button>
+          );
+        })}
     </div>    
     )
 }

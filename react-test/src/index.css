@@ -32,6 +32,48 @@ h2 {
   position: relative;
   margin-bottom: 25px;
 }
+.nav-container {
+  background-color: #333; /* Dark background */
+  padding: 20px 20px; /* Padding for spacing */
+  display: flex; /* Flexbox layout */
+  justify-content: space-between; /* Even space between nav items */
+  align-items: center; /* Align items vertically */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100; /* Stay on top of other elements */
+  padding: auto;
+}
+
+/* List styles */
+.nav-container ul {
+  list-style: none; /* Remove default bullet points */
+  margin: 0;
+  padding: 0;
+  display: flex; /* Display list items inline */
+  gap: 20px; /* Space between list items */
+}
+
+/* Individual list items */
+.nav-container li {
+  margin: 0;
+}
+
+/* Link styles */
+.nav-container a {
+  text-decoration: none; /* Remove underline */
+  color: #fff; /* White text */
+  font-weight: bold; /* Bold text */
+  padding: 10px 15px; /* Padding around the links */
+  transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover effect */
+.nav-container a:hover {
+  background-color: #555; /* Darker background on hover */
+  border-radius: 5px; /* Rounded corners on hover */
+}
 
 input[type="text"],
 input[type="password"] 
@@ -74,6 +116,15 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+.nav-button{
+  width: 100%;
+
+}
+.nav-div{
+  display: flex;
+  padding: 10px;
+  font-size: large;
+}
 
 button:hover {
   background-color: #0056b3;
@@ -101,3 +152,33 @@ input, button {
   transform: scale(1.02);
 }
 
+.parking {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns, can be adjusted */
+  gap: 20px; /* Space between the buttons */
+  padding: 20px;
+}
+
+.parking button {
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  padding: 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+ 
+}
+
+.parking button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+.parking-button.reserved {
+  background-color: gray;
+  cursor: not-allowed; /* Indicate that the spot can't be interacted with */
+}
+
+.parking-button.free {
+  background-color: #4CAF50; /* Green background for free spots */
+}

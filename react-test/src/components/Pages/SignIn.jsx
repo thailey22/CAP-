@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
-import {doSignInWithEmailAndPassword } from "../Firebase/auth";
+import {doSignInWithEmailAndPassword} from "../Firebase/auth";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useAuth } from "../Context/authContext";
-import {getDatabase, push, ref, set} from "firebase/database";
-import { database } from "../Firebase/firebase";
-import { Timestamp } from "firebase/firestore";
+import {getDatabase, push, ref, set, update} from "firebase/database";
+import { auth } from "../Firebase/firebase";
+
 
 
  
@@ -21,11 +22,13 @@ const SignIn = () => {
 
   const Push = () => {
     const db = getDatabase();
-    const userRef = ref(db, "user/" + email.replaceAll('.', '_'));
+    const uid = auth.currentUser?.uid;
+    const userRef = ref(db, "user/" + `users/${uid}`);
     set(userRef,{
-      email: email,
+      email: email.replaceAll('.', '_'),
       password: password,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      active: true
     }
     );
   };
@@ -37,8 +40,19 @@ const SignIn = () => {
       setIsSigningIn(true)
       try{
      await doSignInWithEmailAndPassword(email, password);
+     const db = getDatabase();
+    const uid = auth.currentUser?.uid;
+    const userRef = ref(db, "user/" + `Email-users/${uid}`);
+    set(userRef,{
+      email: email.replaceAll('.', '_'),
+      password: password,
+      timestamp: Date.now(),
+      active: true
+    }
+    );
      console.log('User signed in');
-     Push();
+            
+  
     }
     catch(error){
       setErrorMessage(error.message);
@@ -46,6 +60,37 @@ const SignIn = () => {
     }
   }
   }
+
+  const handelGoogle = async (e) => {
+    e.preventDefault(); 
+    const provider = new GoogleAuthProvider();
+  
+    try {
+     
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+  
+      
+      const db = getDatabase();
+      const uid = user.uid;
+      const userRef = ref(db, "user/" + `Google-users/${uid}`);
+  
+      
+      set(userRef, {
+        displayName: user.displayName,
+        email: user.email.replaceAll('.', '_'),
+        uid: user.uid,
+        timestamp: Date.now(),
+        active: true
+      });
+  
+      console.log('Google Sign-In');
+    } catch (error) {
+      console.error('Google Sign-In error:', error.message);
+    }
+  }
+
+
 
   
     return (
@@ -69,9 +114,12 @@ const SignIn = () => {
             ></input>
           </div>
 
-          <button type="submit" disabled={isSigningIn} onClick={SignIn && Push} >Sign In</button>
+          <button type="submit" disabled={isSigningIn} onClick={SignIn} >Sign In</button>
         </form>
-        {/* <p onClick={() => FormHandle('SignUp')}>Don't have an account? </p> */}
+
+        <button type="submit" onClick={handelGoogle}>Sign in with Google
+        </button>
+       
 
         <p>
           <Link to = '/signup'>Don't have an account?</Link>

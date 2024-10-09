@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useAuth } from "../Context/authContext";
 import { doCreateUserWithEmailAndPassword, doSignInWithEmailAndPassword } from "../Firebase/auth";
 import { Navigate, useNavigate } from "react-router-dom";
+import {getDatabase, push, ref, set, update} from "firebase/database";
+import { auth } from "../Firebase/firebase";
+
  
 const SignUp = () => {
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,60 +15,49 @@ const SignUp = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { userLoggedIn } = useAuth()
+  const { userLoggedIn } = useAuth();  // Assuming this checks if the user is already logged in
 
-  const Push = () => {
+  // Function to push user data to Firebase Realtime Database
+  const pushUserData = (email) => {
     const db = getDatabase();
-    const userRef = ref(db, "userSignIn/" + email.replace('.', '_'));
-    set(userRef,{
+    const uid = auth.currentUser?.uid; // Get the current user's UID
+    const userRef = ref(db, `user/New_users/${uid}`);
+
+    set(userRef, {
       email: email,
-      password: password,
+      loggedIn: true,
       timestamp: Date.now()
-    }
-    );
-  }
+    });
+  };
 
-  
-   const onSubmit = async (e) => {
-    // e.preventDefault()
-
-    // if(!isRegistering){
-    //   setIsRegistering(true);
-    //   await doCreateUserWithEmailAndPassword(email, password)
-    // }
+  // Handle form submission for signing up and storing data
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-        setErrorMessage("Passwords do not match");
-        return;
+      setErrorMessage("Passwords do not match");
+      return;
     }
 
-    try {
-        setIsRegistering(true);  // Disable the button while registering
-        await doCreateUserWithEmailAndPassword(email, password);  // Sign up the user
-        Push();
-        console.log('User signed up');
-        navigate('/home');  // Redirect to home on success
-    } catch (error) {
+    if (!isRegistering) {
+      setIsRegistering(true);
+      try {
+        // Sign in the user
+        await doCreateUserWithEmailAndPassword(email, password);
+        console.log("User signed in");
+
+        // Push user data to Realtime Database
+        pushUserData(email);
+
+       await navigate("/"); // Redirect to home page after successful login
+      } catch (error) {
         setErrorMessage(error.message);
-    } finally {
-        setIsRegistering(false);  // Re-enable the button
+      } finally {
+        setIsRegistering(false);
+      }
     }
+  };
 
-    // await SignUp(auth, User, email, password)
-    //  .then((userCredential) => {
-    //   const user = userCredential.User;
-    //   console.log(User,email ,password)
-    //   navigate("login");
-    //   })
-
-    //   .catch((error)=>{
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.error(errorCode, errorMessage);
-    //   });
-
-    }
 
     return (
       <>
@@ -78,13 +69,6 @@ const SignUp = () => {
         
         <form onSubmit={onSubmit}>
 
-        {/* <div className="form-control">
-            <input type="text" placeholder="Enter your Name"
-             onChange={(e)=> setUser(e.target.value)}
-             value={User}
-            ></input>
-          
-          </div> */}
 
           <div className="form-control">
             <input type="text"
