@@ -2,7 +2,7 @@ import React from 'react'
 import { useAuth } from '../Context/authContext'
 import { useNavigate } from 'react-router-dom'
 
-const Live = () => {
+const Users = () => {
     const { currentUser } = useAuth()
     const navigate = useNavigate()
 
@@ -13,4 +13,4 @@ const Live = () => {
     )
 }
 
-export default Live
+export default Users

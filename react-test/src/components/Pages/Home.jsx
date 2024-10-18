@@ -55,24 +55,51 @@ const Home = () => {
     const handleSpotButton = async (spotNumber) => {
         const db = getDatabase();
         const dbRef = ref(db, `Spots/Spot${spotNumber}`);
+        const currentUserUid = auth.currentUser?.uid;
     
         try {
           const snapshot = await get(dbRef);
           if (snapshot.exists()) {
+
             const currentData = snapshot.val();
-            const newMessage = currentData.message === 'Reserved' ? 'Free' : 'Reserved';
-            await set(dbRef, { message: newMessage });
+            if(currentData.status === 'Reserved' && currentData.reservedBy !== currentUserUid) {
+              alert('This spot is already reserved by another user.');
+              return;
+            }
+            const newStatus = currentData.status === 'Reserved' ? 'Free' : 'Reserved';
+            const reservedBy = newStatus === 'Reserved' ? currentUserUid : null;
+
+            await set(dbRef,{
+              status: newStatus,
+              reservedBy: reservedBy,
+              timestamp: new Date().toISOString()
+            })
     
             
             setSpotStatus((prevState) => ({
               ...prevState,
-              [`Spot${spotNumber}`]: { message: newMessage }
+              [`Spot${spotNumber}`]: 
+              { 
+                status : newStatus,
+                reservedBy : currentData.reservedBy,
+                timestamp : currentData.timestamp
+               }
             }));
+
           } else {
-            await set(dbRef, { message: 'Free' });
-            setSpotStatus((prevState) => ({
+
+            await set(dbRef, {
+              status: 'Reserved',
+              reservedBy: currentUserUid,
+              timestamp: new Date().toISOString()
+             });
+               setSpotStatus((prevState) => ({
               ...prevState,
-              [`Spot${spotNumber}`]: { message: 'Free' }
+              [`Spot${spotNumber}`]: {
+                status : 'Reserved',
+                reservedBy : currentUserUid,
+                timestamp : new Date().toISOString()
+               }
             }));
           }
         } catch (error) {
@@ -91,7 +118,7 @@ const Home = () => {
                         <div className='nav-div'>Hello {currentUser.email ? currentUser.email : currentUser.email}, you are now logged in.</div>
                         <ul>
                             <li><a href="/about">Spot view</a></li>
-                            <li><a href="/contact">Live View</a></li>
+                            <li><a href= '/Live-view'>Live View</a></li>
                         </ul>
                     </nav>
                 </header>
@@ -99,7 +126,7 @@ const Home = () => {
             </div>
              {[...Array(10).keys()].map(i => {
           const spotNumber = i + 1;
-          const isReserved = spotStatus[`Spot${spotNumber}`]?.message === 'Reserved';
+          const isReserved = spotStatus[`Spot${spotNumber}`]?.status === 'Reserved';
           return (
             <button
               key={spotNumber}
