@@ -34,7 +34,7 @@ const Home = () => {
     const handleSignOut = () => {
         const db = getDatabase();
         const uid = auth.currentUser?.uid; // Get the current user's UID
-        const dbRef = ref(db, "user/" + `Google-users/${uid}`);
+        const dbRef = ref(db, `user/${uid}`);
     
         
         update(dbRef, { active: false })
@@ -119,6 +119,7 @@ const Home = () => {
                         <ul>
                             <li><a href="/about">Spot view</a></li>
                             <li><a href= '/Live-view'>Live View</a></li>
+                            <li><a href="/Cars"> Cars</a></li>
                         </ul>
                     </nav>
                 </header>

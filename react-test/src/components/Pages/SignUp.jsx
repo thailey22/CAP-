@@ -21,12 +21,13 @@ const SignUp = () => {
   const pushUserData = (email) => {
     const db = getDatabase();
     const uid = auth.currentUser?.uid; // Get the current user's UID
-    const userRef = ref(db, `user/New_users/${uid}`);
+    const userRef = ref(db, `user/${uid}`);
 
     set(userRef, {
-      email: email,
-      loggedIn: true,
-      timestamp: Date.now()
+      email: email.replaceAll('.', '_'),
+      password: password,
+      timestamp: Date.now(),
+      active: true
     });
   };
 

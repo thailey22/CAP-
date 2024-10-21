@@ -42,7 +42,7 @@ const SignIn = () => {
      await doSignInWithEmailAndPassword(email, password);
      const db = getDatabase();
     const uid = auth.currentUser?.uid;
-    const userRef = ref(db, "user/" + `Email-users/${uid}`);
+    const userRef = ref(db, `user/${uid}`);
     set(userRef,{
       email: email.replaceAll('.', '_'),
       password: password,
@@ -73,10 +73,10 @@ const SignIn = () => {
       
       const db = getDatabase();
       const uid = user.uid;
-      const userRef = ref(db, "user/" + `Google-users/${uid}`);
+      const userRef = ref(db, `user/${uid}`);
   
       
-      set(userRef, {
+      update(userRef, {
         displayName: user.displayName,
         email: user.email.replaceAll('.', '_'),
         uid: user.uid,

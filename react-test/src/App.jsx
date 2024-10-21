@@ -3,6 +3,7 @@ import SignUp from "./components/Pages/SignUp"
 import Home from "./components/Pages/Home";
 import Live from "./components/Pages/Live-view";
 import Users from "./components/Pages/Users";
+import Cars from "./components/Pages/Cars";
 import { AuthProvider } from "./components/Context/authContext";
 import { useRoutes } from "react-router-dom";
 
@@ -34,6 +35,10 @@ function App(){
     path: "/Users",
     element: <Users />,
 
+   },
+   {
+    path: "/Cars",
+    element: <Cars />,
    },
 
  ];
