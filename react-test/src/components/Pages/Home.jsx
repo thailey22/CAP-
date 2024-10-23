@@ -118,7 +118,7 @@ const Home = () => {
                         <div className='nav-div'>Hello {currentUser.email ? currentUser.email : currentUser.email}, you are now logged in.</div>
                         <ul>
                             <li><a href="/about">Spot view</a></li>
-                            <li><a href= '/Live-view'>Live View</a></li>
+                            <li><a href= '/CameraFeed'>Live View</a></li>
                             <li><a href="/Cars"> Cars</a></li>
                         </ul>
                     </nav>

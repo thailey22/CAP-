@@ -134,7 +134,7 @@ button:hover {
 p {
   margin-top: 20px;
   font-size: 0.9rem;
-  color: #555;
+  color: #eae9e9;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -181,4 +181,7 @@ input, button {
 
 .parking-button.free {
   background-color: #4CAF50; /* Green background for free spots */
+}
+.nav-div{
+  color: #bbb;
 }

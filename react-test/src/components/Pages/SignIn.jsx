@@ -43,7 +43,7 @@ const SignIn = () => {
      const db = getDatabase();
     const uid = auth.currentUser?.uid;
     const userRef = ref(db, `user/${uid}`);
-    set(userRef,{
+    update(userRef,{
       email: email.replaceAll('.', '_'),
       password: password,
       timestamp: Date.now(),

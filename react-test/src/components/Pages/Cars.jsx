@@ -112,7 +112,7 @@ const Cars = () => {
                     <ul>
                         {userCars.map((car, index) => (
                             <li key={index}>
-                                {car.Make}
+                                 {car.Color} - {car.Make} 
                             </li>
                         ))}
                     </ul>
