@@ -1,0 +1,76 @@
+/* Home.css */
+
+.nav-container {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+  }
+  
+  .nav-div {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+  }
+  
+  ul li {
+    display: inline;
+  }
+  
+  ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Sign-out button smaller */
+  #signOut {
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 12px; /* Smaller padding */
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    margin: 10px 0;
+  }
+  
+  #signOut:hover {
+    opacity: 0.9;
+  }
+  
+  /* Parking spots larger */
+  .parking-button {
+    width: 150px;
+    height: 80px; /* Increased size for better visibility */
+    margin: 15px;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .parking-button:hover {
+    opacity: 0.85;
+  }
+  
+  /* Colors for different spot statuses */
+  .parking-button[style*="background-color: green"] {
+    background-color: #2ecc71; /* Free spot color */
+  }
+  
+  .parking-button[style*="background-color: gray"] {
+    background-color: #7f8c8d; /* Reserved spot color */
+  }
+  

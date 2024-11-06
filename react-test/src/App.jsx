@@ -1,10 +1,11 @@
-import SignIn from "./components/Pages/SignIn"
-import SignUp from "./components/Pages/SignUp"
-import Home from "./components/Pages/Home";
-import Live from "./components/Pages/Live-view";
+import SignIn from "./components/Pages/SignInComp/SignIn";
+import SignUp from "./components/Pages/SignUpComp/SignUp";
+import Home from "./components/Pages/HomeComp/Home";
+import Live from "./components/Pages/LiveComp/Live-view";
 import Users from "./components/Pages/Users";
-import Cars from "./components/Pages/Cars";
-import CameraFeed from "./components/Pages/Live-view";
+import Cars from "./components/Pages/CarsComp/Cars";
+import Welcome from "./components/Pages/Welcome/welcome";
+import CameraFeed from "./components/Pages/LiveComp/Live-view";
 import { AuthProvider } from "./components/Context/authContext";
 import { useRoutes } from "react-router-dom";
 
@@ -19,7 +20,7 @@ function App(){
      element: <SignUp />,
    },
    {
-     path: "/",
+     path: "/signin",
      element: <SignIn />,
    },
    {
@@ -46,6 +47,11 @@ function App(){
     element: <CameraFeed />,
 
    },
+
+   {
+    path: '/',
+    element: <Welcome />,
+   }
 
  ];
 

@@ -1,0 +1,51 @@
+/* Cars.css */
+.nav-container {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+  }
+  
+  .car-section-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .add-car-section, .car-list-section {
+    flex: 1;
+    padding: 20px;
+    margin: 10px;
+    background-color: #f2f2f2;
+    border-radius: 8px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form div {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin: 5px 0;
+  }
+  

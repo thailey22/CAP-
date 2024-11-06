@@ -11,7 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: linear-gradient(180deg, blue, gold );
+  /* background-image: linear-gradient(180deg, blue, gold ); */
 }
 
 .form-container {

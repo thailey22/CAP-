@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '../Context/authContext'
+import { useAuth } from '../../Context/authContext'
 import { useNavigate } from 'react-router-dom'
 import { getDatabase, set, ref, onValue } from 'firebase/database'
 import { getAuth } from 'firebase/auth'
+import './Car.css'
 
 const Cars = () => {
     const navigate = useNavigate()
@@ -39,7 +40,7 @@ const Cars = () => {
     const pushCarData = (e) => {
         e.preventDefault();
         const db = getDatabase();
-        const uid = auth.currentUser?.uid; // Get the current user's UID
+        const uid = auth.currentUser?.uid; 
         const userRef = ref(db, `user/${uid}/Cars/${car_make}`);
     
         set(userRef, {
@@ -48,7 +49,7 @@ const Cars = () => {
           Model: car_model,
           LPN: car_lpn
         });
-        navigate('/Home')
+        navigate('/Cars')
       };
 
       
@@ -67,6 +68,7 @@ const Cars = () => {
                         </ul>
                     </nav>
                 </header>
+          <section className='add-car-section'>      
             <form onSubmit={pushCarData}>
                  <div>
                     <label>Enter the color of your car </label>
@@ -106,7 +108,9 @@ const Cars = () => {
                 
                 <button type="submit">Submit</button>
            </form>
-           <div>
+            </section>
+
+            <section className='car-list-section'>
            <h3>Your Cars:</h3>
                 {userCars.length > 0 ? (
                     <ul>
@@ -119,8 +123,8 @@ const Cars = () => {
                 ) : (
                     <p>No cars found.</p>
                 )}
+                </section>
            </div>
-        </div>
     )
 }
 
